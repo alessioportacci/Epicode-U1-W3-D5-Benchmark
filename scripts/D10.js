@@ -667,7 +667,7 @@ const tree = function(height)
   }
   return tree
 }
-console.log(tree(20))
+console.log(tree(10))
 
 
 /* ESERCIZIO 29
