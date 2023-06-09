@@ -186,7 +186,7 @@ REGOLE
 
   const dice = function()
   {
-    return Math.floor((Math.random() *6) +1 )
+    return Math.floor((Math.random() *6) +1 )   //DRY!
   }
   console.log("dice,", dice())
 
@@ -198,8 +198,7 @@ REGOLE
   {
     if(n1 > n2)
       return n1
-    else
-      return n2
+    return n2
   }
   console.log("whoIsBigger", whoIsBigger(10, 6))
 
@@ -211,7 +210,7 @@ REGOLE
 
   const splitMe = function(text)
   {
-    return text.split(" ")
+    return text.split(" ")    //DRY!
   }
   console.log("splitMe", splitMe("ciao sono un test"))
 
@@ -224,8 +223,7 @@ REGOLE
   {
     if(check)
       return text.slice(1)
-    else
-      return text.slice(0, -1)
+    return text.slice(0, -1)
   }
   console.log("deleteOne", deleteOne("CIAONE", true))
   console.log("deleteOne", deleteOne("CIAONE", false))
@@ -244,6 +242,8 @@ REGOLE
     return newText
   }
 
+  //Oppure
+
   function onlyLetters2(text){
     return text.replaceAll("0", "")
                .replaceAll("1", "")
@@ -256,7 +256,7 @@ REGOLE
                .replaceAll("8", "")
                .replaceAll("9", "")
   }
-  //Due soluzioni perché non so quale sia più corretta
+
   console.log(onlyLetters("c1aooo"))
   console.log(onlyLetters2("c1aooo"))
 
@@ -268,8 +268,7 @@ REGOLE
   {
     if(email.includes("@") && email.includes("."))
       return true
-    else
-      return false
+    return false
   }
 
   console.log("isThisAnEmail", isThisAnEmail("alessio.portacci.s@gmail.it"))
@@ -281,7 +280,7 @@ REGOLE
   const giorniList = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato", "Domenica"]
   const whatDayIsIt = function()
   {
-    return giorniList[new Date().getDay() - 1]
+    return giorniList[new Date().getDay() - 1]  //DRY! (Più o meno)
   }
 
   console.log("whatDayIsIt", whatDayIsIt())
@@ -302,14 +301,14 @@ REGOLE
 //Ho cercato come calcolare i giorni, 
 const rollTheDices = function(diceNumber)
 {
-  let result = 0
+  let diceResult = 0
   let totalSum = 0
   const dices = [] 
   for(let d = 0; d < diceNumber; d++)
   {
-    result = dice()
-    totalSum += result
-    dices.push(result)
+    diceResult = dice()
+    totalSum += diceResult
+    dices.push(diceResult)
   }   
   return { sum: totalSum, values: dices}
 }
@@ -320,17 +319,21 @@ console.log("rollTheDices", rollTheDices(3))
   Scrivi una funzione chiamata "howManyDays" che riceve una data come parametro e ritorna il numero di giorni trascorsi da tale data.
 */
 
-/* 
-  Per i calcoli matematici ho usato questa soluzione trovata su StackOverflow. Spero non sia considerato barare! ^^"
-  https://stackoverflow.com/questions/3224834/get-difference-between-2-dates-in-javascript?#answer-3224854
-*/
+
 const howManyDays = function(date)
 {
-  const diffTime = Math.abs(new Date() - new Date(date))
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+  /*Uso math.abs per ottenere il valore assoluto (non ha senso dire -1 giorni)
+    Genero una nuova data e imposto l'ora a 00:00:00:00 perché altrimenti viene contato
+    un giorno anche nel caso si parli di due date identiche*/
+  const diffTime = Math.abs(new Date().setHours(0, 0, 0, 0) - new Date(date))
+  
+/*Per i calcoli matematici ho usato questa soluzione trovata su StackOverflow. Spero non sia considerato barare! ^^"
+  https://stackoverflow.com/questions/3224834/get-difference-between-2-dates-in-javascript?#answer-3224854
+*/  
+  let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
   return diffDays
 }
-console.log("howManyDays", howManyDays("06/05/2023"))
+console.log("howManyDays", howManyDays("06/5/2023"))
 
 
 /* ESERCIZIO 10
@@ -344,8 +347,7 @@ const isTodayMyBirthday = function(date)
 
   if(today.toDateString() == date.toDateString())
     return true
-  else
-    return false
+  return false
 }
 console.log("isTodayMyBirthday", isTodayMyBirthday("06/09/2023"))
 
@@ -440,7 +442,8 @@ console.log("sumAllTheYears", sumAllTheYears())
   const searchByTitle = function(title)
   {
     let selectedMovie = "404 not found"
-    movies.forEach(function(movie){
+    movies.forEach(function(movie)
+    {
       if (movie.Title === title)
         selectedMovie = movie
     })
@@ -457,7 +460,8 @@ console.log("sumAllTheYears", sumAllTheYears())
   {
     const match = []
     const unmatch = []
-    movies.forEach(function(movie){
+    movies.forEach(function(movie)
+    {
       if (movie.Title.includes(string))
         match.push(movie)
       else
@@ -471,13 +475,16 @@ console.log("sumAllTheYears", sumAllTheYears())
 /* ESERCIZIO 19
   Scrivi una funzione chiamata "removeIndex" che riceve un numero come parametro e ritorna l'array "movies" fornito privo dell'elemento nella posizione ricevuta come parametro. */
 
-  const removeIndexBROKEN = function(index)
-  {                                       //Splice prende l'index da cui iniziare e gli elementi da eliminare, sto dicendo di andare all'indice [INDEX] e di eliminare un elemento
-    return [...movies].splice(index, 1)   //<== QUESTO DOVREBBE FUNZIONARE!!":( https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice?retiredLocale=it
+  const removeIndex = function(index)
+  {      
+    let moviesSpliced = [...movies]
+    moviesSpliced.splice(index, 1)                     
+    return moviesSpliced   
   }
 
-  //Ho dovuto fare così perché lo splice non sta funzionando
-  const removeIndex = function(index)
+  //OPPURE 
+
+  const removeIndex2 = function(index)
   {
     const moviesLen = movies.length
     const moviesArray = [] 
@@ -490,11 +497,11 @@ console.log("sumAllTheYears", sumAllTheYears())
     return moviesArray
   }
 
-  console.log("Remove Index non funzionante",removeIndexBROKEN(2))
   console.log("RemoveIndex", removeIndex(2))
 
 
 // DOM (nota: gli elementi che selezionerai non si trovano realmente nella pagina)
+
 //No prob, li aggiungo io 
 
 /* ESERCIZIO 20
@@ -535,6 +542,7 @@ console.log("sumAllTheYears", sumAllTheYears())
   {
     document.querySelectorAll("td").forEach(td => console.log(td))  //DRY
   }
+
   tdContent()
 
 
@@ -545,7 +553,6 @@ console.log("sumAllTheYears", sumAllTheYears())
   {
     const as = document.getElementsByTagName("a")
     Array.from(as).forEach(a => a.style.backgroundColor = "red")
-
   }
 
   const redLinksNotVeryDRY = function()
@@ -557,11 +564,11 @@ console.log("sumAllTheYears", sumAllTheYears())
   {
     document.querySelectorAll("a").forEach(a => a.style.backgroundColor = "red") //DRY!
   }
+  
   redLinks()
 
 /* ESERCIZIO 24
-  Scrivi una funzione per aggiungere un nuovo elemento alla lista non ordinata con id "myList".
-*/
+  Scrivi una funzione per aggiungere un nuovo elemento alla lista non ordinata con id "myList". */
 
 const addLi = function()
 {
@@ -592,6 +599,7 @@ const removeLis2 = function()
     ul.removeChild(ul.lastChild)
 }
 removeLis2()
+
 
 /* ESERCIZIO 26
   Scrivi una funzione per aggiungere ad ogni tag <tr> la classe CSS "test" */
@@ -627,6 +635,7 @@ removeLis2()
 const halfTree = function(height)
 {
   let tree = ""
+  //Semplice for per le righe che aggiunge gli asterischi
   for(let i = 1; i <= height; i++)
   {
     tree += "*".repeat(i)
@@ -671,8 +680,7 @@ console.log(tree(10))
 
 
 /* ESERCIZIO 29
-  Crea una funzione chiamata "isItPrime" che riceve un numero come parametro e ritorna true se il numero fornito è un numero primo.
-*/
+  Crea una funzione chiamata "isItPrime" che riceve un numero come parametro e ritorna true se il numero fornito è un numero primo. */
 
 const isItPrime = function(number)
 {
