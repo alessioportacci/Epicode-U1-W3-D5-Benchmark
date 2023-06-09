@@ -652,11 +652,17 @@ console.log(halfTree(3))
 const tree = function(height)
 {
   let tree = ""
-  const space = height > 1 ? height -1: 0  //Mi calcolo il numero di asterischi a sinistra che ha l'ultimo asterisco centrale 
+  /*Ho bisogno di sapere quanti asterischi deve avere a sinistra l'asterisco
+    centrale dell'ultima riga per calcolarmi gli spazi vuoti (Se l'altezza è di 1, deve rimanere 1)*/
+  const space = height > 1 ? height -1: 0
   let currentSpace = 0
   for(let i = 0; i < height; i++)
   {
-    currentSpace = space - i              //Gli spazi vuoti sono dinamici, dipendono dalla riga in cui ci troviamo
+    /* Gli spazi a sinistra dell'attuale riga sono uguali agli spazi dell'ultima MENO
+       il numero di asterischi che devo mettere*/ 
+    currentSpace = space - i 
+    /* Adesso aggiungo gli spazi vuoti ed il numero di asterischi; ovvero il numero 
+       di riga * 2 + quello centrale (le righe iniziano da 0, così la prima riga ne avrà uno solo*/ 
     tree += " ".repeat(currentSpace) + "*".repeat((i* 2) +1) + "\n"
   }
   return tree
